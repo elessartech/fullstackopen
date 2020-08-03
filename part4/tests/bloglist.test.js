@@ -1,5 +1,43 @@
 const listHelper = require('../utils/list_helper')
 
+const listWithOneBlog = [
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5,
+    __v: 0
+  }
+]
+
+const listWithMultipleBlogs = [
+    {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 5,
+        __v: 0
+    },
+    {
+        _id: '5a422aa71b54a676234d17f7',
+        title: 'Go To Statement Considered Harmful',
+        author: 'James Hetfield',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 12,
+        __v: 1
+      },
+      {
+        _id: '5a422aa71b54a676234d17f7',
+        title: 'Go To Statement Considered Harmful',
+        author: 'James Hetfield',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 14,
+        __v: 2
+      }
+]
+
 test('dummy returns one', () => {
   const blogs = []
 
@@ -8,36 +46,6 @@ test('dummy returns one', () => {
 })
 
 describe('total likes', () => {
-    const listWithOneBlog = [
-      {
-        _id: '5a422aa71b54a676234d17f8',
-        title: 'Go To Statement Considered Harmful',
-        author: 'Edsger W. Dijkstra',
-        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-        likes: 5,
-        __v: 0
-      }
-    ]
-
-    const listWithMultipleBlogs = [
-        {
-            _id: '5a422aa71b54a676234d17f8',
-            title: 'Go To Statement Considered Harmful',
-            author: 'Edsger W. Dijkstra',
-            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-            likes: 5,
-            __v: 0
-        },
-        {
-            _id: '5a422aa71b54a676234d17f7',
-            title: 'Go To Statement Considered Harmful',
-            author: 'James Hetfield',
-            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-            likes: 12,
-            __v: 1
-          }
-    ]
-  
     test('when list has only one blog equals the likes of that', () => {
       const result = listHelper.totalLikes(listWithOneBlog)
       expect(result).toBe(5)
@@ -50,7 +58,13 @@ describe('total likes', () => {
     
     test('of a bigger list is calculated right', () => {
         const result = listHelper.totalLikes(listWithMultipleBlogs)
-        expect(result).toBe(17)
+        expect(result).toBe(31)
     })
+  })
 
+  describe("favorite blog", () => {
+    test("return the most liked blog", () => {
+        const returnedList = listHelper.favoriteBlog(listWithMultipleBlogs)
+        expect(returnedList).toEqual({title: 'Go To Statement Considered Harmful', author: 'James Hetfield', likes: 14})
+    })
   })
