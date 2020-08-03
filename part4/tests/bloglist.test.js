@@ -29,7 +29,7 @@ const listWithMultipleBlogs = [
         __v: 1
       },
       {
-        _id: '5a422aa71b54a676234d17f7',
+        _id: '5a422aa71b54a676234d17f6',
         title: 'Go To Statement Considered Harmful',
         author: 'James Hetfield',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
@@ -62,9 +62,23 @@ describe('total likes', () => {
     })
   })
 
-  describe("favorite blog", () => {
-    test("return the most liked blog", () => {
-        const returnedList = listHelper.favoriteBlog(listWithMultipleBlogs)
-        expect(returnedList).toEqual({title: 'Go To Statement Considered Harmful', author: 'James Hetfield', likes: 14})
-    })
+describe("favorite blog", () => {
+  test("return the most liked blog", () => {
+      const returnedList = listHelper.favoriteBlog(listWithMultipleBlogs)
+      expect(returnedList).toEqual({title: 'Go To Statement Considered Harmful', author: 'James Hetfield', likes: 14})
   })
+})
+
+describe("most blogs", () => {
+  test("return the author who has the largest amount of blogs", () => {
+      const returnedList = listHelper.mostBlogs(listWithMultipleBlogs)
+      expect(returnedList).toEqual({author: 'James Hetfield', blogs: 2})
+  })
+})
+
+describe("most likes", () => {
+  test("return the author, whose blog posts have the largest amount of likes", () => {
+      const returnedList = listHelper.mostLikes(listWithMultipleBlogs)
+      expect(returnedList).toEqual({author: 'James Hetfield', likes: 14})
+  })
+})
