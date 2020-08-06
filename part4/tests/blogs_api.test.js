@@ -7,18 +7,14 @@ const Blog = require("../models/blog");
 const api = supertest(app);
 
 const helper = require("../utils/test_helper");
-const { initialBlogs } = require("../utils/test_helper");
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  console.log("cleared");
 
-  helper.initialBlogs.forEach(async (note) => {
-    let blogObject = new Blog(note);
+  for (let blog of helper.initialBlogs) {
+    let blogObject = new Blog(blog);
     await blogObject.save();
-    console.log("saved");
-  });
-  console.log("done");
+  }
 });
 
 describe("when there is initially some blogs saved", () => {
@@ -37,8 +33,8 @@ describe("when there is initially some blogs saved", () => {
   });
 });
 
-describe("addition of a new note", () => {
-  test("a valid note can be added", async () => {
+describe("addition of a new blog", () => {
+  test("a valid blog can be added", async () => {
     const newBlog = {
       title: "Introduction to Machine Learning in Python",
       author: "Maksim Ilmast",
@@ -56,8 +52,8 @@ describe("addition of a new note", () => {
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
-    const contents = blogsAtEnd.map((n) => n.title);
-    expect(contents).toContain("Introduction to Machine Learning in Python");
+    const titles = blogsAtEnd.map((blog) => blog.title);
+    expect(titles).toContain("Introduction to Machine Learning in Python");
   });
 
   test("blog without likes is not added", async () => {
@@ -72,7 +68,7 @@ describe("addition of a new note", () => {
 
     const response = await api.get("/api/blogs");
 
-    expect(response.body).toHaveLength(initialBlogs.length);
+    expect(response.body).toHaveLength(helper.initialBlogs.length);
   });
 
   test("blog without title and url is not added", async () => {
@@ -85,7 +81,24 @@ describe("addition of a new note", () => {
 
     const response = await api.get("/api/blogs");
 
-    expect(response.body).toHaveLength(initialBlogs.length);
+    expect(response.body).toHaveLength(helper.initialBlogs.length);
+  });
+});
+
+describe("deletion of a blog", () => {
+  test("succeeds with status code 204 if id is valid", async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+
+    const titles = blogsAtEnd.map((blog) => blog.title);
+
+    expect(titles).not.toContain(blogToDelete.title);
   });
 });
 
