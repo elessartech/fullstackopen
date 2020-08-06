@@ -102,6 +102,28 @@ describe("deletion of a blog", () => {
   });
 });
 
+describe("update of a blog", () => {
+  test("succeeds with status code 204 if id is valid", async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToUpdate = { ...blogsAtStart[0] };
+
+    blogToUpdate.author = "Maksim Ilmast";
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+
+    const authors = blogsAtEnd.map((blog) => blog.author);
+
+    expect(authors).toContain(blogToUpdate.author);
+  });
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
