@@ -9,7 +9,11 @@ blogsRouter.get("/blogs", async (request, response) => {
 blogsRouter.post("/blogs", async (request, response) => {
   const content = new Blog(request.body);
   const parsedContent = JSON.parse(JSON.stringify(content));
-  if (!parsedContent.hasOwnProperty("likes")) {
+  if (
+    !parsedContent.hasOwnProperty("likes") ||
+    (!parsedContent.hasOwnProperty("url") &&
+      !parsedContent.hasOwnProperty("title"))
+  ) {
     response.status(400).end();
   } else {
     const result = await content.save();
