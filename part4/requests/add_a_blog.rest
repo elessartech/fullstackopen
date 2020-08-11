@@ -1,6 +1,7 @@
 POST http://localhost:3003/api/blogs 
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjVmMzE3NGQwZTM5ZTBiMDc2NGI4ZDNiMSIsImlhdCI6MTU5NzE1MzUxNX0.TRPQSCsA_htC3Hl7Wo2ybUGeKO4QEPXq9Mh-Gq_2DhQ  
 
 {
-    "title": "my blog", "author": "James Hetfield", "url": "http://google.com", "likes": "5" 
+    "title": "my test blog", "author": "Maksim Ilmast", "url": "http://google.com", "likes": "5" 
 }

@@ -7,6 +7,7 @@ const initialBlogs = [
     url:
       "https://medium.com/discourse/you-dont-need-college-anymore-says-google-102d4beec668",
     likes: 5200,
+    user: undefined
   },
   {
     title: "A.I. Is Not Going to Magically Deliver a Coronavirus Vaccine",
@@ -14,11 +15,13 @@ const initialBlogs = [
     url:
       "https://onezero.medium.com/a-i-is-not-going-to-magically-deliver-a-coronavirus-vaccine-6c9fb58af521",
     likes: 3,
+    user: undefined
   },
 ];
 
 const initialUsers = [
   {
+    blogs: [],
     username: "test",
     name: "test",
     password: "test",
