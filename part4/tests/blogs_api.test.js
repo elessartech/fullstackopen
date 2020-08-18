@@ -45,7 +45,10 @@ describe("addition of a new blog", () => {
 
     await api
       .post("/api/blogs")
-      .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjVmMzE3NGQwZTM5ZTBiMDc2NGI4ZDNiMSIsImlhdCI6MTU5NzE1NTk2MX0.exKf4T-71vmrO-DL2-neU8Jn6k0cuFS8CV2BMYfVHnM')
+      .set(
+        "Authorization",
+        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjVmMzE3NGQwZTM5ZTBiMDc2NGI4ZDNiMSIsImlhdCI6MTU5NzE1NTk2MX0.exKf4T-71vmrO-DL2-neU8Jn6k0cuFS8CV2BMYfVHnM"
+      )
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/);
@@ -57,7 +60,7 @@ describe("addition of a new blog", () => {
     expect(titles).toContain("Introduction to Machine Learning in Python");
   });
 
-  test("blog without likes is not added", async () => {
+  test("if the likes property is missing from the request, it will default to the value 0", async () => {
     const newBlog = {
       title: "Introduction to Machine Learning in Python",
       author: "Maksim Ilmast",
@@ -65,11 +68,11 @@ describe("addition of a new blog", () => {
         "https://medium.com/@maksimilmast/introduction-to-machine-learning-in-python-31c2cdbccf66",
     };
 
-    await api.post("/api/blogs").set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjVmMzE3NGQwZTM5ZTBiMDc2NGI4ZDNiMSIsImlhdCI6MTU5NzE1NTk2MX0.exKf4T-71vmrO-DL2-neU8Jn6k0cuFS8CV2BMYfVHnM').send(newBlog).expect(400);
-
-    const response = await api.get("/api/blogs");
-
-    expect(response.body).toHaveLength(helper.initialBlogs.length);
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .end((err, res) => expect(res.body.likes).toEqual(0));
   });
 
   test("blog without title and url is not added", async () => {
@@ -78,7 +81,7 @@ describe("addition of a new blog", () => {
       likes: 31,
     };
 
-    await api.post("/api/blogs").set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjVmMzE3NGQwZTM5ZTBiMDc2NGI4ZDNiMSIsImlhdCI6MTU5NzE1NTk2MX0.exKf4T-71vmrO-DL2-neU8Jn6k0cuFS8CV2BMYfVHnM').send(newBlog).expect(400);
+    await api.post("/api/blogs").send(newBlog).expect(400);
 
     const response = await api.get("/api/blogs");
 
@@ -91,7 +94,7 @@ describe("deletion of a blog", () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjVmMzE3NGQwZTM5ZTBiMDc2NGI4ZDNiMSIsImlhdCI6MTU5NzE1NTk2MX0.exKf4T-71vmrO-DL2-neU8Jn6k0cuFS8CV2BMYfVHnM').expect(204);
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
 
