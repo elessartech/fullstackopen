@@ -100,6 +100,21 @@ const App = () => {
     }
   };
 
+  const increaseLikes = (blog) => {
+    const updatedBlog = {
+      user: blog.user.id,
+      likes: Number(blog.likes + 1),
+      author: blog.author,
+      title: blog.title,
+      url: blog.url 
+    }
+    blogService.update(blog.id, updatedBlog);
+    setNotificationMessage("you likes the post " + blog.title);
+      setTimeout(() => {
+        setNotificationMessage(null);
+    }, 5000);
+  }
+
   if (user === null) {
     return (
       <div>
@@ -130,7 +145,7 @@ const App = () => {
         />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog increaseLikes={(blog) => increaseLikes(blog)} key={blog.id} blog={blog} />
       ))}
     </div>
   );

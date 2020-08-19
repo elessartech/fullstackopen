@@ -8,7 +8,7 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, increaseLikes }) => {
   const [unwrapped, setUnwrapped] = useState(false) 
   
   const additionalInfoWrapper = {display: unwrapped ? "" : "none"}
@@ -23,7 +23,7 @@ const Blog = ({ blog }) => {
           {blog.url}
         </div>
         <div>
-          likes {blog.likes} <button>like</button>
+          likes {blog.likes} <button onClick={() => increaseLikes(blog)}>like</button>
         </div>
         <div>
           {blog.user.username}
