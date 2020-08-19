@@ -8,10 +8,11 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog, increaseLikes }) => {
+const Blog = ({ blog, blogAddedByUser, increaseLikes, removeBlog }) => {
   const [unwrapped, setUnwrapped] = useState(false) 
   
   const additionalInfoWrapper = {display: unwrapped ? "" : "none"}
+  const removeBtnVisibility = {display: blogAddedByUser ? "" : "none"}
 
   return (
     <div style={blogStyle}>
@@ -27,6 +28,9 @@ const Blog = ({ blog, increaseLikes }) => {
         </div>
         <div>
           {blog.user.username}
+        </div>
+        <div style={removeBtnVisibility}>
+          <button style={{backgroundColor: "blue"}} onClick={() => removeBlog(blog)}>remove</button>
         </div>
       </div>
     </div>

@@ -100,19 +100,39 @@ const App = () => {
     }
   };
 
-  const increaseLikes = (blog) => {
+  const increaseLikes = (blogData) => {
     const updatedBlog = {
-      user: blog.user.id,
-      likes: Number(blog.likes + 1),
-      author: blog.author,
-      title: blog.title,
-      url: blog.url 
+      user: blogData.user.id,
+      likes: Number(blogData.likes + 1),
+      author: blogData.author,
+      title: blogData.title,
+      url: blogData.url 
     }
-    blogService.update(blog.id, updatedBlog);
-    setNotificationMessage("you likes the post " + blog.title);
+    blogService.update(blogData.id, updatedBlog);
+    setNotificationMessage("you liked the post " + blogData.title);
       setTimeout(() => {
         setNotificationMessage(null);
     }, 5000);
+  }
+
+  const sortBlogsByLikes = (prev, next) => {
+    if ( prev.likes < next.likes ){
+      return 1;
+    }
+    if ( prev.likes > next.likes ){
+      return -1;
+    }
+    return 0;
+  }
+
+  const removeBlog = (blogData) => {
+    if (window.confirm("Remove blog " + blogData.title + " by " + blogData.author + " ?")) {
+      blogService.remove(blogData.id);
+      setNotificationMessage("you removed the post " + blogData.title + " by " + blogData.author);
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
+    }
   }
 
   if (user === null) {
@@ -144,8 +164,8 @@ const App = () => {
           setUrl={(u) => setUrl(u)}
         />
       </Togglable>
-      {blogs.map((blog) => (
-        <Blog increaseLikes={(blog) => increaseLikes(blog)} key={blog.id} blog={blog} />
+      {blogs.sort(sortBlogsByLikes).map((blog) => (
+        <Blog blogAddedByUser={blog.user.username === user.username} removeBlog={(blogData) => removeBlog(blogData)} increaseLikes={(blogData) => increaseLikes(blogData)} key={blog.id} blog={blog} />
       ))}
     </div>
   );
