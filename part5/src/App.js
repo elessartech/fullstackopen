@@ -118,7 +118,7 @@ const App = () => {
       <span>
         {user.username} logged in <button onClick={handleLogout}>logout</button>
       </span>
-      <Togglable buttonLabel="new blog">
+      <Togglable buttonLabel="create new blog">
         <NewBlogForm
           onSubmit={(event) => createNewBlog(event)}
           title={title}
