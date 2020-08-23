@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const NewBlogForm = ({
   onSubmit,
@@ -38,6 +39,13 @@ const NewBlogForm = ({
       </form>
     </React.Fragment>
   );
+};
+
+NewBlogForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  setTitle: PropTypes.func.isRequired,
+  setAuthor: PropTypes.func.isRequired,
+  setUrl: PropTypes.func.isRequired,
 };
 
 export default NewBlogForm;
