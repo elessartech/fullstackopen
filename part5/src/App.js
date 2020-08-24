@@ -12,9 +12,6 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  const [title, setTitle] = useState(null);
-  const [author, setAuthor] = useState(null);
-  const [url, setUrl] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -79,18 +76,17 @@ const App = () => {
     </form>
   );
 
-  const createNewBlog = async (event) => {
-    event.preventDefault();
-    if (!title || !author || !url) {
+  const createNewBlog = async (blogData) => {
+    if (!blogData.title || !blogData.author || !blogData.url) {
       setErrorMessage("All inputs must be filled!");
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
     } else {
       const newBlog = {
-        title: title,
-        author: author,
-        url: url,
+        title: blogData.title,
+        author: blogData.author,
+        url: blogData.url,
       };
       blogService.create(newBlog);
       setNotificationMessage("a new blog " + newBlog.title + " added");
@@ -160,15 +156,7 @@ const App = () => {
         {user.username} logged in <button onClick={handleLogout}>logout</button>
       </span>
       <Togglable buttonLabel="create new blog">
-        <NewBlogForm
-          onSubmit={(event) => createNewBlog(event)}
-          title={title}
-          author={author}
-          url={url}
-          setTitle={(t) => setTitle(t)}
-          setAuthor={(a) => setAuthor(a)}
-          setUrl={(u) => setUrl(u)}
-        />
+        <NewBlogForm createNewBlog={(newBlog) => createNewBlog(newBlog)} />
       </Togglable>
       {blogs.sort(sortBlogsByLikes).map((blog) => (
         <Blog

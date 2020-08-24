@@ -56,16 +56,12 @@ test("if the like button is clicked twice, the event handler the component recei
     },
   };
 
-  let timesClicked = 0;
-
-  const increaseLikes = () => {
-    timesClicked += 1;
-  };
+  const increaseLikes = jest.fn();
 
   const component = render(<Blog blog={blog} increaseLikes={increaseLikes} />);
 
   const button = component.getByText("like");
   fireEvent.click(button);
   fireEvent.click(button);
-  expect(timesClicked).toEqual(2);
+  expect(increaseLikes.mock.calls).toHaveLength(2);
 });
