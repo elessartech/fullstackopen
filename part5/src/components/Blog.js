@@ -16,15 +16,19 @@ const Blog = ({ blog, blogAddedByUser, increaseLikes, removeBlog }) => {
 
   return (
     <div style={blogStyle}>
-      <div>
+      <div className="blog">
         {blog.title} {blog.author}{" "}
-        <button onClick={() => setUnwrapped(!unwrapped)}>
+        <button className="unwrapBtn" onClick={() => setUnwrapped(!unwrapped)}>
           {unwrapped ? "hide" : "view"}
         </button>
       </div>
-      <div id="AdditionalInfo" style={additionalInfoWrapper}>
-        <div>{blog.url}</div>
-        <div>
+      <div
+        id="AdditionalInfo"
+        className="additionalInfo"
+        style={additionalInfoWrapper}
+      >
+        <div className="url">{blog.url}</div>
+        <div className="likes">
           likes {blog.likes}{" "}
           <button onClick={() => increaseLikes(blog)}>like</button>
         </div>
