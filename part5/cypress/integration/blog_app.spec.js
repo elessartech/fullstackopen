@@ -47,8 +47,8 @@ describe("Blog app", function () {
       }).then(({ body }) => {
         localStorage.setItem('loggedBlogappUser', JSON.stringify(body))
         cy.visit('http://localhost:3000')
-        cy.get("#username-input").type("test");
-        cy.get("#password-input").type("test");
+        cy.get("#username-input").type(username);
+        cy.get("#password-input").type(password);
         cy.get("#login-button").click();
       })
     })
@@ -107,5 +107,35 @@ describe("Blog app", function () {
         cy.contains("you liked the post")
       });
   });
+
+  describe('making sure that the user who created a blog can delete it', function () {
+    beforeEach(function () {
+      cy.createBlog({
+        title: 'My Test Blog',
+        author: "Test Author",
+        url: "google.com"
+      })
+    })
+
+    it("A blog can be deleted", function () {
+      cy.contains("view").click();
+      cy.contains("remove").click();
+      cy.contains("you removed the post");
+    });
+
+    it("A blog cannot be deleted by other users", function () {
+      cy.contains("logout").click();
+      const user = {
+        name: "test2",
+        username: "test2",
+        password: "test",
+      };
+      cy.request("POST", "http://localhost:3001/api/users/", user);
+      cy.login({ username: user.username, password: user.password })
+      cy.contains("view").click();
+      cy.get('#removeBtn').should('not.be.visible')
+    });
+  });
+
   });
 });

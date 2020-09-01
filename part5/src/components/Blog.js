@@ -35,6 +35,7 @@ const Blog = ({ blog, blogAddedByUser, increaseLikes, removeBlog }) => {
         <div>{blog.user.username}</div>
         <div style={removeBtnVisibility}>
           <button
+            id="removeBtn"
             style={{ backgroundColor: "blue" }}
             onClick={() => removeBlog(blog)}
           >
