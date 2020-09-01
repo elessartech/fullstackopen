@@ -57,6 +57,7 @@ const App = () => {
       <div>
         username
         <input
+          id="username-input"
           type="text"
           value={username || ""}
           name="Username"
@@ -66,13 +67,16 @@ const App = () => {
       <div>
         password
         <input
+          id="password-input"
           type="password"
           value={password || ""}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button id="login-button" type="submit">
+        login
+      </button>
     </form>
   );
 
@@ -150,8 +154,12 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <div style={{ color: "red" }}>{errorMessage}</div>
-      <div style={{ color: "green" }}>{notificationMessage}</div>
+      <div className="error-message" style={{ color: "red" }}>
+        {errorMessage}
+      </div>
+      <div className="notification-message" style={{ color: "green" }}>
+        {notificationMessage}
+      </div>
       <span>
         {user.username} logged in <button onClick={handleLogout}>logout</button>
       </span>
