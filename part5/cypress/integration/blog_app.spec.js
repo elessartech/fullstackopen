@@ -53,11 +53,11 @@ describe("Blog app", function () {
       })
     })
 
-    Cypress.Commands.add('createBlog', ({ title, author, url }) => {
+    Cypress.Commands.add('createBlog', ({ title, author, url, likes=null }) => {
       cy.request({
         url: 'http://localhost:3001/api/blogs/',
         method: 'POST',
-        body: { title, author, url },
+        body: { title, author, url, likes},
         headers: {
           'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedBlogappUser')).token}`
         }
@@ -134,6 +134,35 @@ describe("Blog app", function () {
       cy.login({ username: user.username, password: user.password })
       cy.contains("view").click();
       cy.get('#removeBtn').should('not.be.visible')
+    });
+  });
+
+  describe('the blogs are ordered according to likes with the blog with the most likes being first', function () {
+    beforeEach(function () {
+      cy.createBlog({
+        title: 'My Test Blog',
+        author: "Test Author",
+        url: "google.com",
+        likes: 5
+      }),
+      cy.createBlog({
+        title: 'My Test Blog 2',
+        author: "Test Author",
+        url: "google.com",
+        likes: 3 
+      }),
+      cy.createBlog({
+        title: 'My Test Blog 3',
+        author: "Test Author",
+        url: "google.com",
+        likes: 9
+      })
+    })
+
+    it("Blogs are ordered properly", function () {
+      cy.get('.likes').eq(0).should('have.text', 'likes 9 like')
+      cy.get('.likes').eq(1).should('have.text', 'likes 5 like')
+      cy.get('.likes').eq(2).should('have.text', 'likes 3 like')
     });
   });
 
