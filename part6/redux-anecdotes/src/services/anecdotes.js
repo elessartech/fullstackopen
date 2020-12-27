@@ -15,4 +15,12 @@ const createNewAnecdote = async (content) => {
     return response.data
 }
 
-export default { getAll, createNewAnecdote }
+const updateVotes = async (id) => {
+    const anecdotes = await getAll()
+    const object = anecdotes.filter(anecdote => anecdote.id === id)[0]
+    object.votes += 1
+    const response = await axios.put(baseUrl+ "/" + id, object)
+    return response.data
+}
+
+export default { getAll, createNewAnecdote, updateVotes }

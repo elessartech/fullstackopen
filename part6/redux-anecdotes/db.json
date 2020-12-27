@@ -34,6 +34,16 @@
       "content": "Some new anecdote",
       "votes": 0,
       "id": "64293"
+    },
+    {
+      "content": "Some new anecdote 2",
+      "votes": 0,
+      "id": "63498"
+    },
+    {
+      "content": "Some new anecdote 3",
+      "votes": 2,
+      "id": "30418"
     }
   ]
 }
