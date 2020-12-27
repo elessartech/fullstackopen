@@ -5,7 +5,7 @@ export const createNotification = (notification) => {
     }
 }
 
-const notificationReducer = (state = "initial state", action) => {
+const notificationReducer = (state = "", action) => {
     switch (action.type) {
         case 'CREATE':
             return "".concat("", action.data.notification)
