@@ -5,9 +5,8 @@ import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
 import Filter from './components/Filter'
 import { 
-  voteFor, initializeAnecdotes
+  initializeAnecdotes
 } from './reducers/anecdoteReducer' 
-import { createNotification } from './reducers/notificationReducer'
 import { filterAnecdotes } from "./reducers/filterReducer"
 
 const App = () => {
@@ -20,12 +19,6 @@ const App = () => {
     dispatch(initializeAnecdotes())
   }, [dispatch])
 
-  const vote = (anecdote) => {
-    dispatch(voteFor(anecdote.id))
-    dispatch(createNotification("you voted for " + anecdote.content))
-    setTimeout (() => dispatch(createNotification("")), 5000)
-  }
-
   const modifyFilteringString = (event) => {
     dispatch(filterAnecdotes(event.target.value))
   }
@@ -36,7 +29,7 @@ const App = () => {
       <Notification notification={notification}/>
       <AnecdoteForm />
       <Filter onChange={modifyFilteringString}/>
-      <AnecdoteList filter={filter} anecdotes={anecdotes} onClick={vote}/>
+      <AnecdoteList filter={filter} anecdotes={anecdotes}/>
     </div>
   )
 }
