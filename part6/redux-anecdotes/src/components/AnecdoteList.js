@@ -1,15 +1,14 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { voteFor } from "../reducers/anecdoteReducer"
 
-const AnecdoteList = ({anecdotes, filter}) => {
-    const dispatch = useDispatch()
+const AnecdoteList = ({filter, anecdotes, voteFor, setNotification}) => {
 
     const vote = async (anecdote) => {
-        dispatch(voteFor(anecdote.id))
-        dispatch(setNotification("you voted for " + anecdote.content, 2))
-      }
+        voteFor(anecdote.id)
+        setNotification("you voted for " + anecdote.content, 5)
+    }
 
     return (
     <React.Fragment>
@@ -28,4 +27,21 @@ const AnecdoteList = ({anecdotes, filter}) => {
   )
 }
 
-export default AnecdoteList
+const mapStateToProps = (state) => {
+    return {
+        anecdotes: state.anecdotes,
+        filter: state.filter
+    }
+  }
+
+const mapDispatchToProps = {
+    voteFor,
+    setNotification
+}
+  
+const ConnectedAnecdoteList = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AnecdoteList)
+
+export default ConnectedAnecdoteList

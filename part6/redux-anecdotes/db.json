@@ -32,18 +32,23 @@
     },
     {
       "content": "Some new anecdote",
-      "votes": 1,
+      "votes": 9,
       "id": "64293"
     },
     {
       "content": "Some new anecdote 2",
-      "votes": 11,
+      "votes": 60,
       "id": "63498"
     },
     {
       "content": "Some new anecdote 3",
-      "votes": 18,
+      "votes": 60,
       "id": "30418"
+    },
+    {
+      "content": "Some new anecdote 4",
+      "votes": 39,
+      "id": "39308"
     }
   ]
 }

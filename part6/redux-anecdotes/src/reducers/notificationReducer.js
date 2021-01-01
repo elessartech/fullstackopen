@@ -12,10 +12,13 @@ const hideNotification = () => {
     }
 }
 
+let timer
+
 export const setNotification = (notification, sec) => { 
     return dispatch => {
         dispatch(showNotification(notification))
-        setTimeout(() => dispatch(hideNotification()), sec*1000)
+        clearTimeout(timer)
+        timer = setTimeout(() => dispatch(hideNotification()), sec*1000)
     }
 }
 
