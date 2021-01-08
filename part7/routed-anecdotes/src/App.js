@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {
   Switch, Route, Link, useRouteMatch, Redirect
 } from "react-router-dom"
+import  { useField } from './hooks'
 
 const Menu = () => {
   const padding = {
@@ -61,38 +62,53 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  //const [content, setContent] = useState('')
+  //const [author, setAuthor] = useState('')
+  //const [info, setInfo] = useState('')
+
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
 
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    const contentVal = content.value
+    const authorVal = author.value
+    const infoVal = info.value
     props.addNew({
-      content,
-      author,
-      info,
+      content: contentVal,
+      author: authorVal,
+      info: infoVal,
       votes: 0
     })
+  }
+
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.onReset()
+    author.onReset()
+    info.onReset()
   }
 
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onReset={handleReset}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...info} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="reset">reset</button>
       </form>
     </div>
   )
@@ -146,7 +162,6 @@ const App = () => {
       ? anecdotes.find(anec => Number(anec.id) === Number(match.params.id))
       : null
 
-  console.log(notification)
 
   return (
     <div>
