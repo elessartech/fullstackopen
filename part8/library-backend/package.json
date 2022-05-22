@@ -1,0 +1,16 @@
+{
+  "name": "library-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "apollo-server": "^3.6.1",
+    "apollo-server-core": "^3.6.1",
+    "graphql": "^16.2.0",
+    "mongoose": "5.13.0",
+    "mongoose-unique-validator": "^3.0.0"
+  }
+}
