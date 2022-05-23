@@ -7,7 +7,7 @@ const MONGODB_URI = 'mongodb+srv://test:test@bloglisttest.mn5ka.mongodb.net/Grap
 
 console.log('connecting to', MONGODB_URI)
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('connected to MongoDB')
   })
@@ -54,33 +54,55 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allBooks: (root, args) => {
-      let booksToReturn = Book.find({})
-      if (args.author) booksToReturn = Book.find({author: args.author})
-      if (args.genre) booksToReturn = Book.find({genres: [].includes(args.genre)})
-      return booksToReturn
+    allBooks: async (root, args) => {
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author })
+        return await Book.find({author: author._id}).populate('author')
+      } 
+      if (args.genre) {
+        return await Book.find({genres: args.genre}).populate('author', {name: 1})
+      } 
+      return await Book.find({}).populate('author', { name: 1 })
     },
-    allAuthors: () => Author.find({})
+    allAuthors: async () => {
+      const authors = await Author.find({})
+      const books = await Book.find({})
+      const updatedAuthors = [...authors].map((author) => {
+        let bookCount = 0
+        books.forEach((book) => {
+          if (book.author._id.toString() == author._id.toString()) {
+            bookCount += 1
+          } 
+        })
+        author["bookCount"] = bookCount
+        return author
+      })
+      return updatedAuthors
+    }
    },
    Author: {
     name: (root) => root.name,
-    bookCount: (root) => {
-     return Book.find({author: book.author}).length
+    bookCount: async (root) => {
+     return await Book.find({author: book.author}).length
     }
    },
    Mutation: {
-    addBook: (root, args) => {
-      const isAuthorInSystem = Author.findOne({name: args.author}) 
-      const newBook = new Book({ ...args })
+    addBook: async (root, args) => {
+      let isAuthorInSystem = await Author.findOne({name: args.author}) 
+      console.log(isAuthorInSystem)
       if (!isAuthorInSystem) {
-        const newAuthor = {name: args.author}
-        newAuthor.save()
+        let newAuthor = new Author({name: args.author, born: null})
+        isAuthorInSystem = newAuthor
+        await newAuthor.save()
       }
-      return newBook.save()
+      let newBook = new Book({title: args.title, genres: args.genres, published: args.published, author: isAuthorInSystem})
+      await newBook.save()
+      return newBook
     },
     editAuthor: async (root, args) => {
-      const author = await Author.findOne({ name: args.name })
+      let author = await Author.findOne({ name: args.name })
       author.born = args.setBornTo
+      await author.save()
       return author
     }
   }
