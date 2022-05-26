@@ -23,17 +23,29 @@ const typeDefs = gql`
     genres: [String!]!
     id: ID!
   }
+
   type Author {
     name: String!
     born: Int
     bookCount: Int
    }
+
+   type User {
+    username: String!
+    favouriteGenre: String!
+    id: ID!
+  }
+  
+  type Token {
+    value: String!
+  }
   
    type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]
     allAuthors: [Author]!
+    me: User
    }
   
    type Mutation {
@@ -47,7 +59,16 @@ const typeDefs = gql`
       name: String!
       setBornTo: Int!
     ): Author
+    createUser(
+      username: String!
+      favouriteGenre: String!
+    ): User
+    login(
+      username: String!
+      password: String!
+    ): Token
    }
+
 `
 
 const resolvers = {
@@ -93,16 +114,34 @@ const resolvers = {
       if (!isAuthorInSystem) {
         let newAuthor = new Author({name: args.author, born: null})
         isAuthorInSystem = newAuthor
-        await newAuthor.save()
+        try {
+          await newAuthor.save()
+        } catch(error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        }
       }
       let newBook = new Book({title: args.title, genres: args.genres, published: args.published, author: isAuthorInSystem})
-      await newBook.save()
+      try {
+        await newBook.save()
+      } catch(error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      } 
       return newBook
     },
     editAuthor: async (root, args) => {
       let author = await Author.findOne({ name: args.name })
       author.born = args.setBornTo
-      await author.save()
+      try {
+        await author.save()
+      } catch(error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
       return author
     }
   }
