@@ -32,11 +32,11 @@ const Recommend = (props) => {
   
 
   useEffect(() => {
-    if (user.data && !result.data) {
+    if (user.data && !result.loading && !user.loading) {
       getBooksByGenre({ variables: { genre: user.data.me.favouriteGenre } })
       setFavouriteGenre(user.data.me.favouriteGenre)
     }
-  }, [getBooksByGenre, user])
+  }, [getBooksByGenre, user.loading, result.loading, user.data])
 
 
   useEffect(() => {
