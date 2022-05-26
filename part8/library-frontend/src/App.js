@@ -10,7 +10,6 @@ const ALL_AUTHORS = gql`
     allAuthors {
       name
       born
-      bookCount
     }
   }
 `
@@ -20,7 +19,10 @@ const ALL_BOOKS = gql`
     allBooks {
       title
       published
-      author
+      genres
+      author {
+        name
+      }
     }
   }
 `
@@ -30,6 +32,8 @@ const App = () => {
   
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
+
+  console.log(books)
 
   if (authors.loading || books.loading) {
     return <div>loading...</div>
