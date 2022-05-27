@@ -4,7 +4,15 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
 import Recommend from "./components/Recommend";
-import { gql, useQuery, useApolloClient } from "@apollo/client";
+import { gql, useQuery, useApolloClient, useSubscription, } from "@apollo/client";
+
+const NEW_BOOK = gql`
+  subscription {
+    newBook {
+      title
+    }
+  }
+`
 
 const ALL_AUTHORS = gql`
   query {
@@ -28,6 +36,21 @@ const ALL_BOOKS = gql`
   }
 `;
 
+const updateCache = (cache, query, newBook) => {
+  const uniqByName = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.name
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByName(allBooks.concat(newBook)),
+    }
+  })
+}
+
 const App = () => {
   const [page, setPage] = useState("login");
   const [token, setToken] = useState(null);
@@ -35,6 +58,14 @@ const App = () => {
 
   const authors = useQuery(ALL_AUTHORS);
   const books = useQuery(ALL_BOOKS);
+
+  useSubscription(NEW_BOOK, {
+    onSubscriptionData: ({ subscriptionData, client }) => {
+      const newBook = subscriptionData.data.newBook.title
+      console.log(`${newBook} added`)
+      updateCache(client.cache, { query: ALL_BOOKS }, newBook)
+    },
+  })
 
   if (authors.loading || books.loading) {
     return <div>loading...</div>;
@@ -46,6 +77,7 @@ const App = () => {
     client.resetStore();
     setPage("login")
   };
+
 
 
   if (!token) {
